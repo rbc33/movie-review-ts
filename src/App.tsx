@@ -1,26 +1,31 @@
 import { useState } from "react";
-import NavBar from "./components/navbar";
-import { Routes, Route, Link, useActionData } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import AddReview from "./components/add-review";
-import MoviesList from "./components/movies-list";
-import Movie from "./components/movie";
 import Login from "./components/login";
+import Movie from "./components/movie";
+import MoviesList from "./components/movies-list";
+import NavBar from "./components/navbar";
 
 export interface User {
 	name: string;
 	id: string;
 }
+
 function App() {
 	const [user, setUser] = useState<User | undefined>(undefined);
+
 	async function login(user?: User) {
 		setUser(user);
 	}
+
 	async function logout() {
 		setUser(undefined);
 	}
+
 	return (
-		<div className="w-screen h-screen flex bg-gray-800 ">
+		<div className="w-full h-full flex flex-col bg-gray-800">
 			<NavBar user={user} onClick={logout} />
+
 			<Routes>
 				<Route path="/" element={<MoviesList />} />
 				<Route path="/movies" element={<MoviesList />} />
@@ -34,7 +39,7 @@ function App() {
 
 				<Route
 					path="/login"
-					element={<Login login={(user?: User) => login(user)} />}
+					element={<Login login={(user) => login(user)} />}
 				></Route>
 			</Routes>
 		</div>

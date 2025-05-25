@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import { User } from "../App";
 
 interface NavbarProps {
-	user?: string;
+	user?: User;
 	onClick?: () => void;
 }
 

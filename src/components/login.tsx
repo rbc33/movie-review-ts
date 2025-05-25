@@ -6,36 +6,28 @@ interface LoginProps {
 	login: (user?: User) => void;
 }
 
-const Login = ({ login }: LoginProps) => {
+const Login = (props: LoginProps) => {
 	const [name, setName] = useState("");
 	const [id, setId] = useState("");
 	const navigate = useNavigate();
 
-	const logIn = () => {
-		login({ name: name, id: id });
-
+	const login = () => {
+		const user: User = { name, id };
+		props.login(user);
 		navigate("/");
-	};
-
-	const onChangeName = (e) => {
-		const name = e.target.value;
-		setName(name);
-	};
-
-	const onChangeId = (e) => {
-		const id = e.target.value;
-		setId(id);
 	};
 
 	return (
 		<div>
-			<form>
+			<form onSubmit={(e) => e.preventDefault()}>
 				<label>Username</label>
 				<input
 					type="text"
 					placeholder="Enter username"
 					value={name}
-					onChange={onChangeName}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+						setName(e.target.value)
+					}
 				/>
 
 				<label>ID</label>
@@ -43,9 +35,13 @@ const Login = ({ login }: LoginProps) => {
 					type="text"
 					placeholder="Enter id"
 					value={id}
-					onChange={onChangeId}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+						setId(e.target.value)
+					}
 				/>
-				<button onClick={logIn}>Submit</button>
+				<button type="submit" onClick={login}>
+					Submit
+				</button>
 			</form>
 		</div>
 	);

@@ -26,11 +26,6 @@ const AddReview = ({ user }: AddReviewProps) => {
 	const [review, setReview] = useState(initialReviewState);
 	const [submitted, setSubmitted] = useState(false);
 
-	const onChangeReview = (e) => {
-		const review = e.target.value;
-		setReview(review);
-	};
-
 	const saveReview = () => {
 		const data: Data = {
 			review: review,
@@ -79,7 +74,9 @@ const AddReview = ({ user }: AddReviewProps) => {
 						type="text"
 						required
 						value={review}
-						onChange={onChangeReview}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setReview(e.target.value)
+						}
 					/>
 					<button onClick={saveReview}>Submit</button>
 				</form>

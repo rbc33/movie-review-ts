@@ -1,25 +1,28 @@
-import React, { useState, useEffect } from "react";
-import MovieDataService from "../services/movies";
-import { Link } from "react-router-dom";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Image from "react-bootstrap/Image";
-import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
-import moment from "moment";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { User } from "../App";
+import MovieDataService from "../services/movies";
 
-const Movie = (props) => {
+interface MovieProps {
+	user?: User;
+}
+const Movie = ({ user }: MovieProps) => {
 	const [movie, setMovie] = useState({
 		id: null,
 		title: "",
 		rated: "",
 		reviews: [],
 	});
-	const params = useParams();
+	const { id } = useParams();
 
-	const getMovie = (id) => {
+	const getMovie = (id: string) => {
 		MovieDataService.get(id)
 
 			.then((response) => {
@@ -28,19 +31,19 @@ const Movie = (props) => {
 				console.log(response.data);
 			})
 
-			.catch((e) => {
+			.catch((e: Error) => {
 				console.log(e);
 			});
 	};
 
 	useEffect(() => {
 		// getMovie(props.match.params.id);
-		getMovie(params.id);
+		getMovie(id!);
 		// }, [props.match.params.id]);
-	}, [params.id]);
+	}, [id]);
 
-	const deleteReview = (reviewId, index) => {
-		MovieDataService.deleteReview(reviewId, props.user.id)
+	const deleteReview = (reviewId: string, index: number) => {
+		MovieDataService.deleteReview(reviewId, user!.id)
 
 			.then((response) => {
 				setMovie((currState) => {
@@ -52,7 +55,7 @@ const Movie = (props) => {
 				});
 			})
 
-			.catch((e) => {
+			.catch((e: Error) => {
 				console.log(e);
 			});
 	};
@@ -74,10 +77,8 @@ const Movie = (props) => {
 
 								{/* {props.user && ( */}
 								{/* <Link to={"/movies/" + props.match.params.id + "/review"}> */}
-								{props.user && (
-									<Link to={"/movies/" + params.id + "/review"}>
-										Add Review
-									</Link>
+								{user && (
+									<Link to={"/movies/" + id + "/review"}>Add Review</Link>
 								)}
 							</Card.Body>
 						</Card>
@@ -98,15 +99,12 @@ const Movie = (props) => {
 
 										<p>{review.review}</p>
 
-										{props.user && props.user.id === review.user_id && (
+										{user && user.id === review.user_id && (
 											<Row>
 												<Col>
 													<Link
 														to={{
-															pathname:
-																// "/movies/" + props.match.params.id + "/review",
-																"/movies/" + params.id + "/review",
-
+															pathname: `/movies/${id}/review`,
 															state: { currentReview: review },
 														}}
 													>
