@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
-import MovieDataService from "../services/movies";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
+import MovieDataService from "../services/movies";
 
-const MoviesList = (props) => {
-	const [movies, setMovies] = useState([]);
+interface Movie {
+	_id: string;
+	title: string;
+	poster: string;
+	plot: string;
+	rated: string;
+	reviews?: object[];
+}
+
+const MoviesList = () => {
+	const [movies, setMovies] = useState<Movie[] | []>([]);
 	const [searchTitle, setSearchTitle] = useState("");
 	const [searchRating, setSearchRating] = useState("");
 	const [ratings, setRatings] = useState(["All Ratings"]);
@@ -21,10 +24,6 @@ const MoviesList = (props) => {
 	useEffect(() => {
 		retrieveRatings();
 	}, []);
-
-	useEffect(() => {
-		setCurrentPage(0);
-	}, [currentSearchMode]);
 
 	useEffect(() => {
 		retrieveNextPage();
@@ -65,18 +64,18 @@ const MoviesList = (props) => {
 				console.log(e);
 			});
 	};
-	const onChangeSearchTitle = (e) => {
+	const onChangeSearchTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const searchTitle = e.target.value;
 
 		setSearchTitle(searchTitle);
 	};
 
-	const onChangeSearchRating = (e) => {
+	const onChangeSearchRating = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const searchRating = e.target.value;
 
 		setSearchRating(searchRating);
 	};
-	const find = (query, by) => {
+	const find = (query: string, by: string) => {
 		setCurrentSearchMode("");
 		MovieDataService.find(query, by)
 
@@ -105,76 +104,117 @@ const MoviesList = (props) => {
 		}
 	};
 	return (
-		<div className="App">
-			<Container>
-				<Form>
-					<Row>
-						<Col>
-							<Form.Group>
-								<Form.Control
+		<div className="min-h-screen bg-gray-900 text-white p-6">
+			<div className="container mx-auto">
+				<div className="bg-gray-800 rounded-lg p-6 shadow-lg mb-8">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+						<div>
+							<label className="block text-sm font-medium mb-2">
+								Search by title
+							</label>
+							<div className="flex">
+								<input
 									type="text"
 									placeholder="Search by title"
 									value={searchTitle}
-									onChange={onChangeSearchTitle}
+									onChange={(e) => onChangeSearchTitle(e)}
+									className="w-full rounded-l-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
 								/>
-							</Form.Group>
+								<button
+									onClick={findByTitle}
+									className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold rounded-r-md px-4 py-2 transition-colors"
+								>
+									Search
+								</button>
+							</div>
+						</div>
 
-							<Button variant="primary" type="button" onClick={findByTitle}>
-								Search
-							</Button>
-						</Col>
+						<div>
+							<label className="block text-sm font-medium mb-2">
+								Filter by rating
+							</label>
+							<div className="flex">
+								<select
+									onChange={(e) => onChangeSearchRating(e)}
+									className="w-full rounded-l-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+								>
+									{ratings.map((rating) => (
+										<option key={rating} value={rating}>
+											{rating}
+										</option>
+									))}
+								</select>
+								<button
+									onClick={findByRating}
+									className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold rounded-r-md px-4 py-2 transition-colors"
+								>
+									Filter
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
-						<Col>
-							<Form.Group>
-								<Form.Control as="select" onChange={onChangeSearchRating}>
-									{ratings.map((rating) => {
-										return (
-											<option key={rating} value={rating}>
-												{rating}
-											</option>
-										);
-									})}
-								</Form.Control>
-							</Form.Group>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+					{movies.map((movie) => (
+						<div
+							key={movie._id}
+							className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+						>
+							<div className="flex flex-col md:flex-row">
+								<img
+									src={movie.poster + "/100px180"}
+									alt={movie.title}
+									className="h-64 w-full md:w-1/3 object-cover"
+								/>
+								<div className="p-4 flex flex-col justify-between w-full md:w-2/3">
+									<div>
+										<h3 className="text-xl font-bold text-yellow-400 mb-2">
+											{movie.title}
+										</h3>
+										<div className="mb-2 text-sm inline-block px-2 py-1 bg-gray-700 rounded-full">
+											Rating: {movie.rated}
+										</div>
+										<p className="text-gray-300 mb-4 line-clamp-3">
+											{movie.plot}
+										</p>
+									</div>
+									<Link
+										to={`/movies/${movie._id}`}
+										className="text-yellow-400 hover:text-yellow-300 font-medium inline-flex items-center"
+									>
+										View Reviews
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-4 w-4 ml-1"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M9 5l7 7-7 7"
+											/>
+										</svg>
+									</Link>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
 
-							<Button variant="primary" type="button" onClick={findByRating}>
-								Search
-							</Button>
-						</Col>
-					</Row>
-				</Form>
-				<Row>
-					{movies.map((movie) => {
-						return (
-							<Col key={movie._id}>
-								<Card style={{ width: "18rem" }}>
-									<Card.Img src={movie.poster + "/100px180"} />
-
-									<Card.Body>
-										<Card.Title>{movie.title}</Card.Title>
-
-										<Card.Text>Rating: {movie.rated}</Card.Text>
-
-										<Card.Text>{movie.plot}</Card.Text>
-
-										<Link to={"/movies/" + movie._id}>View Reviews</Link>
-									</Card.Body>
-								</Card>
-							</Col>
-						);
-					})}
-				</Row>
-				<br />
-				Showing page: {currentPage}.
-				<Button
-					variant="link"
-					onClick={() => {
-						setCurrentPage(currentPage + 1);
-					}}
-				>
-					Get next {entriesPerPage} results
-				</Button>
-			</Container>
+				<div className="mt-8 text-center">
+					<p className="mb-2">Showing page: {currentPage}</p>
+					<button
+						onClick={() => setCurrentPage(currentPage + 1)}
+						className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+					>
+						Get next {entriesPerPage} results
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 };
