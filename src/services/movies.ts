@@ -1,5 +1,7 @@
 import axios from "axios";
 const PORT = 8000;
+const LOCAL_URL = `http://localhost:${PORT}`;
+const BACKEND_URL = "https://mern-movies-backend-hpcv.onrender.com";
 
 export interface Data {
 	movie_id: string;
@@ -11,30 +13,30 @@ export interface Data {
 
 class MovieDataService {
 	getAll(page = 0) {
-		return axios.get(`http://localhost:${PORT}/api/v1/movies?page=${page}`);
+		return axios.get(`${BACKEND_URL}/api/v1/movies?page=${page}`);
 	}
 
 	get(id: string) {
-		return axios.get(`http://localhost:${PORT}/api/v1/movies/id/${id}`);
+		return axios.get(`${BACKEND_URL}/api/v1/movies/id/${id}`);
 	}
 
 	find(query: string, by = "title", page = 0) {
 		return axios.get(
-			`http://localhost:${PORT}/api/v1/movies?${by}=${query}&page=${page}`
+			`${BACKEND_URL}/api/v1/movies?${by}=${query}&page=${page}`
 		);
 	}
 
 	createReview(data: Data) {
-		return axios.post(`http://localhost:${PORT}/api/v1/movies/review`, data);
+		return axios.post(`${BACKEND_URL}/api/v1/movies/review`, data);
 	}
 
 	updateReview(data: Data) {
-		return axios.put(`http://localhost:${PORT}/api/v1/movies/review`, data);
+		return axios.put(`${BACKEND_URL}/api/v1/movies/review`, data);
 	}
 
 	deleteReview(id: string, userId: string) {
 		return axios.delete(
-			`http://localhost:${PORT}/api/v1/movies/review`,
+			`${BACKEND_URL}/api/v1/movies/review`,
 
 			{ data: { review_id: id, user_id: userId } }
 		);
