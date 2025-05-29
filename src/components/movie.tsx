@@ -69,7 +69,7 @@ const Movie = ({ user }: MovieProps) => {
 	return (
 		<div className="min-h-screen bg-gray-900 text-white p-6">
 			<div className="container mx-auto">
-				<div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg mb-8">
+				<div className="bg-gray-800 rounded-s overflow-hidden shadow-lg mb-8">
 					<div className="flex flex-col md:flex-row">
 						<div className="md:w-1/3">
 							<img
@@ -78,7 +78,7 @@ const Movie = ({ user }: MovieProps) => {
 								className="w-full h-auto object-cover"
 							/>
 						</div>
-						<div className="p-6 md:w-2/3">
+						<div className="p-6 flex-col md:w-2/3">
 							<h1 className="text-2xl font-bold text-yellow-400 mb-4">
 								{movie!.title}
 							</h1>
@@ -91,51 +91,56 @@ const Movie = ({ user }: MovieProps) => {
 									Add Review
 								</Link>
 							)}
+
+							<h2 className="text-xl font-bold text-yellow-400 mb-4 text-center">
+								Reviews
+							</h2>
+
+							{movie!.reviews!.length > 0 ? (
+								<div className="space-y-4 pl-4">
+									{movie!.reviews!.map((review, index) => (
+										<div
+											key={index}
+											className="bg-gray-700 rounded-lg p-3 shadow-md"
+										>
+											<div className="flex justify-between items-start mb-4">
+												<h3 className="text-lg font-medium text-yellow-400">
+													{review.name}
+												</h3>
+												<span className="text-sm text-gray-400">
+													{moment(review.date).format("Do MMMM YYYY")}
+												</span>
+											</div>
+											<p className="text-gray-300 mb-2">{review.review}</p>
+
+											{user && user.id === review.user_id && (
+												<div className="flex space-x-4">
+													<Link
+														to={`/movies/${id}/review`}
+														state={{ currentReview: review }}
+														className="text-blue-400 hover:text-blue-300 transition-colors"
+													>
+														Edit
+													</Link>
+													<button
+														onClick={() => deleteReview(review._id, index)}
+														className="text-red-400 hover:text-red-300 transition-colors"
+													>
+														Delete
+													</button>
+												</div>
+											)}
+										</div>
+									))}
+								</div>
+							) : (
+								<p className="text-gray-400 italic">
+									No reviews yet. Be the first to review!
+								</p>
+							)}
 						</div>
 					</div>
 				</div>
-
-				<h2 className="text-xl font-bold text-yellow-400 mb-4">Reviews</h2>
-
-				{movie!.reviews!.length > 0 ? (
-					<div className="space-y-4">
-						{movie!.reviews!.map((review, index) => (
-							<div key={index} className="bg-gray-800 rounded-lg p-6 shadow-md">
-								<div className="flex justify-between items-start mb-4">
-									<h3 className="text-lg font-medium text-yellow-400">
-										{review.name}
-									</h3>
-									<span className="text-sm text-gray-400">
-										{moment(review.date).format("Do MMMM YYYY")}
-									</span>
-								</div>
-								<p className="text-gray-300 mb-4">{review.review}</p>
-
-								{user && user.id === review.user_id && (
-									<div className="flex space-x-4">
-										<Link
-											to={`/movies/${id}/review`}
-											state={{ currentReview: review }}
-											className="text-blue-400 hover:text-blue-300 transition-colors"
-										>
-											Edit
-										</Link>
-										<button
-											onClick={() => deleteReview(review._id, index)}
-											className="text-red-400 hover:text-red-300 transition-colors"
-										>
-											Delete
-										</button>
-									</div>
-								)}
-							</div>
-						))}
-					</div>
-				) : (
-					<p className="text-gray-400 italic">
-						No reviews yet. Be the first to review!
-					</p>
-				)}
 			</div>
 		</div>
 	);
