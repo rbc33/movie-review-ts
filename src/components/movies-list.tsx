@@ -165,7 +165,7 @@ const MoviesList = () => {
 								<img
 									src={movie.poster + "/100px180"}
 									alt={movie.title}
-									className="h-64 w-full md:w-1/3 object-cover"
+									className="h-80 w-full md:w-1/3 object-cover"
 								/>
 								<div className="p-4 flex flex-col justify-between w-full md:w-2/3">
 									<div>

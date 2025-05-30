@@ -1,6 +1,6 @@
 import axios from "axios";
-const PORT = 8000;
-const LOCAL_URL = `http://localhost:${PORT}`;
+// const PORT = 8000;
+// const LOCAL_URL = `http://localhost:${PORT}`;
 const BACKEND_URL = "https://mern-movies-backend-hpcv.onrender.com";
 
 export interface Data {
@@ -43,7 +43,7 @@ class MovieDataService {
 	}
 
 	getRatings() {
-		return axios.get(`http://localhost:${PORT}/api/v1/movies/ratings`);
+		return axios.get(`${BACKEND_URL}/api/v1/movies/ratings`);
 	}
 }
 
