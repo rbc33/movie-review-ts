@@ -42,16 +42,13 @@ const Movie = ({ user }: MovieProps) => {
 	};
 
 	useEffect(() => {
-		// getMovie(props.match.params.id);
 		getMovie(id!);
-		// }, [props.match.params.id]);
 	}, [id]);
 
 	const deleteReview = (reviewId: string, index: number) => {
 		MovieDataService.deleteReview(reviewId, user!.id)
 
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			.then((_response) => {
+			.then(() => {
 				setMovie((currState) => {
 					currState.reviews.splice(index, 1);
 

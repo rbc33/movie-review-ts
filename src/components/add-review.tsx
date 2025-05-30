@@ -13,11 +13,6 @@ const AddReview = ({ user }: AddReviewProps) => {
 	let initialReviewState = "";
 	let editing = false; // means adding. if editing, set to true
 
-	//check if 'state' is passed inde
-	// if (props.location.state && props.location.state.currentReview) {
-	// 	editing = true;
-	// 	initialReviewState = props.location.state.currentReview.review;
-	// }
 	if (location.state && location.state.currentReview) {
 		editing = true;
 		initialReviewState = location.state.currentReview.review;
@@ -31,13 +26,10 @@ const AddReview = ({ user }: AddReviewProps) => {
 			review: review,
 			name: user!.name,
 			user_id: user!.id,
-			// movie_id: props.match.params.id, // get movie id direct from url
-			movie_id: params!.id!, // get movie id direct from url
+			movie_id: params!.id!,
 		};
 
 		if (editing) {
-			// get existing review id
-			// data.review_id = props.location.state.currentReview._id;
 			data.review_id = location.state.currentReview._id;
 			MovieDataService.updateReview(data)
 				.then((response) => {
