@@ -1,7 +1,8 @@
 import axios from "axios";
 // const PORT = 8000;
 // const LOCAL_URL = `http://localhost:${PORT}`;
-const BACKEND_URL = "https://mern-movies-backend-hpcv.onrender.com";
+const BACKEND_URL =
+	"https://app-f27e3843-2d2e-47ac-aa78-f90aa4eef436.cleverapps.io";
 
 export interface Data {
 	movie_id: string;
