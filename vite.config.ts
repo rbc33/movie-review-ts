@@ -6,7 +6,7 @@ export default defineConfig({
 	plugins: [react(), tailwindcss()],
 	preview: {
 		host: true,
-		port: 4173,
-		allowedHosts: ['movies.rbenthem.com'],
+		// port: 4173,
+		allowedHosts: [process.env.BACKEND_URL||'http://localhost:8081'],
 	},
 })
